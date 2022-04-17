@@ -64,12 +64,6 @@ Auto Chat Messages can be set at:
 
 This is mostly a simplicity decision at the moment. It would not be hard to add support for several messages to look for, but it rather hit performance of the script and seems unnecessary.
 
-## Encore Enemies are not counted | Displays "0"
-
-An PSE Encore does not trigger the Auto Chat for the Event "PSE Burst", but does so for "PSE Climax". As such, the script never starts to log for enemies but runs the finish-portion later.
-
-As Encore Enemy Count are currently not part of the research, simply removing this message would be an easy fix. However, I may end adding support for it when fixing the previous issue.
-
 ## Different Encodings for the Logfiles varying in Windows Version and Game Version
 
 This one is just theoretical, as I stumbled over something similar when using Logfiles to create a Chat Bridge between PSO2 and Discord. It seems like that the Logfiles are encoded differently for different versions of Windows and PSO2 (Steam, XBox, ...).
