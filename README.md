@@ -1,11 +1,11 @@
 # NGSPSECount
 A python script which keeps track of enemies killed during an PSE in PSO2:NGS. That's it.
 
-The code has been thrown together in a couple of minutes. It is just supposed to work, it is not going to win any engineering awards. The codes performance is questionable. I know.
+The code has been thrown together in a couple of minutes. It is just supposed to work, it is not going to win any engineering awards. The code performance is questionable. I know.
 
 # Why?
 
-There has been research going on in which people look for correlations between the amount of killed enemies during a PSE and the appearance of a so called "PSE Encore". For that, people have kept track of their progress in Title Tasks such as `Huntsman of Retem Alnothe VI` (kill 60000 Enemies) at the beginning and end of an PSE, noted those numbers down and also noted if an Encore occured. However, as more people hit the latest Tier of this Title Task, the progress stops counting.
+There has been research going on in which people look for correlations between the amount of killed enemies during a PSE and the appearance of a so called "PSE Encore". For that, people have kept track of their progress in Title Tasks such as `Huntsman of Retem Alnothe VI` (kill 60000 Enemies) at the beginning and end of an PSE, noted those numbers down and also noted if an Encore occurred. However, as more people hit the latest Tier of this Title Task, the progress stops counting.
 
 This script is supposed to be a cheap alternative for keeping track of enemies killed during an PSE for those researchers. However, it might as well be used for practice or comparison purposes by anyone.
 
@@ -74,4 +74,10 @@ This can probably be fixed by looking for another Action in the ActionLog that s
 
 An PSE Encore does not trigger the Auto Chat for the Event "PSE Burst", but does so for "PSE Climax". As such, the script never starts to log for enemies but runs the finish-portion later.
 
-As Encore Enemy Count are currently not part of the research, simply removing this message would be an easy fix. However, i may end adding support for it when fixing the previous issue.
+As Encore Enemy Count are currently not part of the research, simply removing this message would be an easy fix. However, I may end adding support for it when fixing the previous issue.
+
+## Different Encodings for the Logfiles varying in Windows Version and Game Version
+
+This one is just theoretical, as I stumbled over something similar when using Logfiles to create a Chat Bridge between PSO2 and Discord. It seems like that the Logfiles are encoded differently for different versions of Windows and PSO2 (Steam, XBox, ...).
+
+As I not own to have 3+ different Windows Versions with all 4 variants of PSO2:NGS on each, this will probably not get fixed until someone brings awareness to this in an Issue, Pull Request or by messaging me privately.
