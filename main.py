@@ -97,7 +97,7 @@ def action_loop():
 
             # Check for UTC Midnight to update values
             if int(datetime.now(timezone.utc).strftime("%Y%m%d")) > date:
-                date, chatlog_path, chatlog_count = init("ActionLog")
+                date, path, old_count = init("ActionLog")
             # Check for Changes in the ActionLog File
             f = open(path, 'r', encoding='utf-16')
             new_count = sum(1 for _ in f) - 1
