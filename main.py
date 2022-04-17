@@ -33,8 +33,6 @@ def init(log_type):
     count = sum(1 for _ in f) - 1
     f.close()
 
-    prints.print_info(f"{log_type} File for {date} found.")
-
     return date, path, count
 
 
