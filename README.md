@@ -1,5 +1,5 @@
 # NGSPSECount
-A python script which keeps track of enemies killed during an PSE in Phantasy Star Online 2: New Genesis. That's it.
+A python script which keeps track of enemies killed during an PSE in PSO2:NGS. That's it.
 
 The code has been thrown together in a couple of minutes. It is just supposed to work, it is not going to win any engineering awards. The codes performance is questionable. I know.
 
