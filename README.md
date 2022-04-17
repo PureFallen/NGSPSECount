@@ -3,6 +3,9 @@ A python script which keeps track of enemies killed during an PSE in PSO2:NGS. T
 
 The code has been thrown together in a couple of minutes. It is just supposed to work, it is not going to win any engineering awards. The code performance is questionable. I know.
 
+![image](https://user-images.githubusercontent.com/68307987/163701308-b19ffbb5-8407-4fb5-bc74-6bf553da597e.png)
+
+
 # Why?
 
 There has been research going on in which people look for correlations between the amount of killed enemies during a PSE and the appearance of a so called "PSE Encore". For that, people have kept track of their progress in Title Tasks such as `Huntsman of Retem Alnothe VI` (kill 60000 Enemies) at the beginning and end of an PSE, noted those numbers down and also noted if an Encore occurred. However, as more people hit the latest Tier of this Title Task, the progress stops counting.
@@ -63,6 +66,15 @@ Auto Chat Messages can be set at:
 ## Script only allows for one Auto Chat to be set per Event Type at the same time
 
 This is mostly a simplicity decision at the moment. It would not be hard to add support for several messages to look for, but it rather hit performance of the script and seems unnecessary.
+
+## Other Types of Meseta Gain count as Enemy Kill
+
+As gaining Meseta is the used indicator for an enemy kill, the amount of killed enemies may be wrong when receiving Meseta inside a PSE Burst. Most likely this will happen if you:
+
+- Cleaning up Inventory/Storages during PSE Burst
+- Clear a Task which Rewards N-Meseta
+
+This could be fixed by checking the ActionType `[Pickup]` if this really becomes to big of an issue. For now it is cut out due to simplicity.
 
 ## Different Encodings for the Logfiles varying in Windows Version and Game Version
 
