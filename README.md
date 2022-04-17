@@ -12,16 +12,24 @@ This script is supposed to be a cheap alternative for keeping track of enemies k
 More information:
 
 https://nitter.net/dilute_rin/status/1515107043891642369
+
 https://nitter.net/dilute_rin/status/1515108153628983297
+
 https://nitter.net/dilute_rin/status/1515109040984313860
+
 https://nitter.net/TheuberClips/status/1515109226561286145
+
 https://nitter.net/flowerint1034/status/1515111429355245568
 
 Snapshots:
 https://web.archive.org/web/20220417020420/https://twitter.com/dilute_rin/status/1515107043891642369
+
 https://web.archive.org/web/20220417020643/https://twitter.com/dilute_rin/status/1515108153628983297
+
 https://web.archive.org/web/20220417020835/https://twitter.com/dilute_rin/status/1515109040984313860
+
 https://web.archive.org/web/20220417021041/https://twitter.com/TheuberClips/status/1515109226561286145
+
 https://web.archive.org/web/20220417021223/https://twitter.com/flowerint1034/status/1515111429355245568
 
 # How?
