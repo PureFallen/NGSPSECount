@@ -67,15 +67,6 @@ Auto Chat Messages can be set at:
 
 This is mostly a simplicity decision at the moment. It would not be hard to add support for several messages to look for, but it rather hit performance of the script and seems unnecessary.
 
-## Other Types of Meseta Gain count as Enemy Kill
-
-As gaining Meseta is the used indicator for an enemy kill, the amount of killed enemies may be wrong when receiving Meseta inside a PSE Burst. Most likely this will happen if you:
-
-- Cleaning up Inventory/Storages during PSE Burst
-- Clear a Task which Rewards N-Meseta
-
-This could be fixed by checking the ActionType `[Pickup]` if this really becomes to big of an issue. For now it is cut out due to simplicity.
-
 ## Different Encodings for the Logfiles varying in Windows Version and Game Version
 
 This one is just theoretical, as I stumbled over something similar when using Logfiles to create a Chat Bridge between PSO2 and Discord. It seems like that the Logfiles are encoded differently for different versions of Windows and PSO2 (Steam, XBox, ...).

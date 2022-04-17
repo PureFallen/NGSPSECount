@@ -107,8 +107,9 @@ def action_parser(lines):
         # "ITEM" for Meseta is empty; instead it is only referred in AMOUNT as "Meseta(12)".
         line_list = line.split("\t")
         if len(line_list) >= 7:
+            action_type = line_list[2].strip()
             amount = line_list[6].strip()
-            if amount.startswith("N-Meseta"):
+            if action_type == "[Pickup]" and amount.startswith("N-Meseta"):
                 global ENEMIES
                 ENEMIES += 1
 
@@ -123,8 +124,9 @@ def latest_trial():
         # Check function action_listener for Legend.
         line_list = line.split("\t")
         if len(line_list) >= 7:
+            action_type = line_list[2].strip()
             amount = line_list[6].strip()
-            if amount.startswith("N-Meseta"):
+            if action_type == "[Pickup]" and amount.startswith("N-Meseta"):
                 if amount == "N-Meseta(1000)" or amount == "N-Meseta(1500)":
                     break
                 enemies += 1
