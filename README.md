@@ -64,12 +64,6 @@ Auto Chat Messages can be set at:
 
 This is mostly a simplicity decision at the moment. It would not be hard to add support for several messages to look for, but it rather hit performance of the script and seems unnecessary.
 
-## Some Enemies are not counted at the Start of a PSE Burst
-
-The script starts counting once the PSE Auto Chat Message is posted. This message is posted once the "PSE Burst" UI Element is displayed, which can be delayed by NPC communications of the previous Emergency Trial and similar. As such, the real amount of killed enemies is a bit higher than the one displayed.
-
-This can probably be fixed by looking for another Action in the ActionLog that suggest the clearance of an Emergency Trial (required to enter the PSE Burst) or for a Meseta Increase that is bigger than the usual Enemy one (Emergency Trial Reward), but this could hurt the complexity of the script and maybe break with future updates.
-
 ## Encore Enemies are not counted | Displays "0"
 
 An PSE Encore does not trigger the Auto Chat for the Event "PSE Burst", but does so for "PSE Climax". As such, the script never starts to log for enemies but runs the finish-portion later.

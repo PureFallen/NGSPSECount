@@ -93,6 +93,19 @@ def action_loop():
             global ENEMIES
             if ENEMIES == -1:
                 date, path, old_count = init("ActionLog")
+
+                # PSE Auto Chat is delayed; Look for latest cleared Trial
+                f = open(path, 'r', encoding='utf-16')
+                lines = f.readlines()
+                for i, line in enumerate(lines):
+                    # Check function action_listener for Legend.
+                    line_list = line.split("\t")
+                    if len(line_list) >= 7:
+                        amount = line_list[6].replace("\n", "")
+                        if amount == "N-Meseta(1000)" or amount == "N-Meseta(1500)":
+                            prints.print_info(i)
+                            old_count = i
+
                 ENEMIES += 1
 
             # Check for UTC Midnight to update values
