@@ -82,7 +82,7 @@ def chat_listener(f, old_count, new_count):
                     PSE = False
                     prints.print_info("PSE Climax detected.")
                     prints.print_info(f"Enemies killed during PSE: {BColors.LIGHT_PURPLE}{ENEMIES}")
-                else:
+                elif ENEMIES != -1:
                     prints.print_info("Additional PSE Climax detected. Is that an Encore, or did you change rooms?")
                     prints.print_info(f"Enemies killed since last PSE Climax: {BColors.LIGHT_PURPLE}{encore_routine()}")
 
