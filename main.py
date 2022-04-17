@@ -71,6 +71,7 @@ def chat_listener(f, old_count, new_count):
             global ENEMIES
             global PSE
 
+            # Each Message ends with a Newline. No, I do not know why.
             msg = line_list[5].replace("\n", "")
             if msg == BURST_MSG:
                 ENEMIES = -1
@@ -143,6 +144,7 @@ def encore_routine():
     lines = f.readlines()[-(new_count - old_count):]
 
     for line in lines:
+        # Check function action_listener for Legend.
         line_list = line.split("\t")
         if len(line_list) >= 7:
             amount = line_list[6].replace("\n", "")
