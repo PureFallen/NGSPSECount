@@ -36,7 +36,7 @@ https://web.archive.org/web/20220417021041/https://twitter.com/TheuberClips/stat
 
 https://web.archive.org/web/20220417021223/https://twitter.com/flowerint1034/status/1515111429355245568
 
-## Update
+## Current State of Research
 
 The Chance for a PSE Encore to appear is guessed at 20%. There seems to be no relationship between "Enemies Killed" and the Chance to gain a PSE Burst.
 
