@@ -1,0 +1,1 @@
+wt python main.py
