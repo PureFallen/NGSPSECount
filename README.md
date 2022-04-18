@@ -40,9 +40,10 @@ https://web.archive.org/web/20220417021223/https://twitter.com/flowerint1034/sta
 
 The Chance for a PSE Encore to appear is guessed at 20%. There seems to be no relationship between "Enemies Killed" and the Chance to gain a PSE Burst.
 
-(Exception: Killing 0 PSE Enemies will reward no PSE Burst with Samplesize n=20)
+(Exception: Killing 0 PSE Enemies will reward no PSE Burst with Sample size n=20)
 
 https://docs.google.com/spreadsheets/d/1N0WPMFXLnHK76RzznlI15psfP73i46YTNteehrxOSEQ
+https://docs.google.com/spreadsheets/d/1_OgubzM5QFe4rua4Xu0GSMAI8Idoq8r2yI8Ioyec6oY
 
 # How?
 
@@ -50,15 +51,17 @@ Almost every interaction and chat message send in PSO2 is logged towards their l
 
 # Setup?
 
-The script requires Python 3 to run. It only uses default packages and local packages, most versions of Python 3 should do.
+[Download](https://github.com/PureFallen/NGSPSECount/releases/latest) the latest version from The Releases Page. Configure the `config.ini` as described below. It is recommended to run the binary by executing `run.cmd`.
 
-[Download](https://github.com/PureFallen/NGSPSECount/archive/refs/heads/main.zip) the Project, edit `main.py` with a Text Editor of your choice and change the constants at the very top to your needs. Nothing fancy like config file yet.
+As alternative, you can [clone](https://github.com/PureFallen/NGSPSECount/archive/refs/heads/main.zip) the project and run the python script `NGSPSECount.py` directly. Please note that this will require a basic installation of Python 3.
 
-| Constant   | Meaning                                                                                                                                                         |
-|------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| PLAYER_ID  | Your PlayerID Number. Prevents double triggering through other players with equal PSE Auto Chats. Can be found in your character information or in the logfile. |
-| BURST_MSG  | The **exact** message send by Auto Chat-Feature when a PSE Burst occurs                                                                                         |
-| CLIMAX_MSG | The **exact** message send by Auto Chat-Feature when a PSE Climax occurs                                                                                        |
+## Configuration
+
+| Config Value | Meaning                                                                                                                                                         |
+|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| PLAYER_ID    | Your PlayerID Number. Prevents double triggering through other players with equal PSE Auto Chats. Can be found in your character information or in the logfile. |
+| BURST_MSG    | The **exact** message send by Auto Chat-Feature when a PSE Burst occurs                                                                                         |
+| CLIMAX_MSG   | The **exact** message send by Auto Chat-Feature when a PSE Climax occurs                                                                                        |
 
 Be sure that the sending of Autowords is enabled for your character.
 
@@ -68,16 +71,8 @@ Auto Chat Messages can be set at:
 
 `ESC -> Chat -> Auto Chat Settings -> Events -> At PSE Burst Start/At PSE Climax`
 
-Once all information has been set, run the script by executing `run.cmd`.
-
-# Known limitations | Issues
+# Known limitations
 
 ## Script only allows for one Auto Chat to be set per Event Type at the same time
 
 This is mostly a simplicity decision at the moment. It would not be hard to add support for several messages to look for, but it rather hit performance of the script and seems unnecessary.
-
-## Different Encodings for the Logfiles varying in Windows Version and Game Version
-
-This one is just theoretical, as I stumbled over something similar when using Logfiles to create a Chat Bridge between PSO2 and Discord. It seems like that the Logfiles are encoded differently for different versions of Windows and PSO2 (Steam, XBox, ...).
-
-As I not own to have 3+ different Windows Versions with all 4 variants of PSO2:NGS on each, this will probably not get fixed until someone brings awareness to this in an Issue, Pull Request or by messaging me privately.
