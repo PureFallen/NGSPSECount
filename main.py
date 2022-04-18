@@ -174,7 +174,7 @@ def reverse_trial_parser(f, enemies):
                     break
                 enemies += 1
 
-    return trial
+    return trial, enemies
 
 
 if __name__ == "__main__":
