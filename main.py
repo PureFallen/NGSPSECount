@@ -1,5 +1,5 @@
 import ctypes.wintypes
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 import glob
 import os
 from threading import Thread
@@ -35,9 +35,8 @@ def init():
     prints.print_info(f"log_ngs folder is {PATH}")
 
 
-def get_file_obj(log_type):
+def get_file_obj(log_type, date=int(datetime.now(timezone.utc).strftime("%Y%m%d"))):
     error_fnf = False
-    date = int(datetime.now(timezone.utc).strftime("%Y%m%d"))
     path = f"{PATH}{log_type}{date}_00.txt"
 
     while True:
@@ -136,8 +135,28 @@ def action_parser(lines):
 
 
 def latest_trial():
-    f, _ = get_file_obj("ActionLog")
     enemies = 0
+
+    # Look for latest trial in today's ActionLog
+    f, _ = get_file_obj("ActionLog")
+    trial, enemies = reverse_trial_parser(f, enemies)
+    f.close()
+    # Edge case: The Trial was cleared before UTC Midnight, while the Auto Chat happened after UTC Midnight.
+    # Look for Trial in yesterday's logfile at the risk of getting something wrong when the person just started.
+    if not trial:
+        date = int((datetime.now(timezone.utc) - timedelta(days=1)).strftime("%Y%m%d"))
+        f, _ = get_file_obj("ActionLog", date)
+        trial, enemies = reverse_trial_parser(f, enemies)
+        f.close()
+        # The person likely joined into an existing PSE Burst and didn't have one for a while.
+        if not trial:
+            enemies = 0
+
+    return enemies
+
+
+def reverse_trial_parser(f, enemies):
+    trial = False
 
     # Depending on Logfile Size, reading every line per line from beginning and then reversing their order seems
     # ~10-100x more performant than reading Byte per Byte from End of File.
@@ -151,10 +170,11 @@ def latest_trial():
             amount = line_list[6].strip()
             if action_type == "[Pickup]" and amount.startswith("N-Meseta"):
                 if amount == "N-Meseta(1000)" or amount == "N-Meseta(1500)":
+                    trial = True
                     break
                 enemies += 1
-    f.close()
-    return enemies
+
+    return trial
 
 
 if __name__ == "__main__":
