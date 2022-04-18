@@ -1,3 +1,4 @@
+import configparser
 import ctypes.wintypes
 from datetime import datetime, timedelta, timezone
 import glob
@@ -7,10 +8,9 @@ from threading import Thread
 from util.colors import BColors
 from util import prints
 
-PLAYER_ID = "11055664"
-BURST_MSG = "/p Triggered PSE Burst."
-CLIMAX_MSG = "/p Triggered PSE Climax."
-
+PLAYER_ID = ""
+BURST_MSG = ""
+CLIMAX_MSG = ""
 PATH = ""
 PSE = False
 ENEMIES = -1
@@ -18,6 +18,9 @@ ENEMIES = -1
 
 def init():
     global PATH
+    global PLAYER_ID
+    global BURST_MSG
+    global CLIMAX_MSG
 
     prints.print_info("Locating log_ngs folder...")
 
@@ -33,6 +36,15 @@ def init():
                            f"when the game is not installed.")
 
     prints.print_info(f"log_ngs folder is {PATH}")
+    prints.print_info("Reading config...")
+
+    config = configparser.ConfigParser()
+    config.read('./config.ini')
+    PLAYER_ID = config['DEFAULT']['PLAYER_ID']
+    BURST_MSG = config['DEFAULT']['PLAYER_ID']
+    CLIMAX_MSG = config['DEFAULT']['PLAYER_ID']
+
+    prints.print_info("config read successfully.")
 
 
 def get_file_obj(log_type, date=int(datetime.now(timezone.utc).strftime("%Y%m%d"))):

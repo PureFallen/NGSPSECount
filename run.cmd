@@ -1,1 +1,1 @@
-wt python main.py
+wt NGSPSECount.exe
