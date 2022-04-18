@@ -139,6 +139,8 @@ def latest_trial():
     f, _ = get_file_obj("ActionLog")
     enemies = 0
 
+    # Depending on Logfile Size, reading every line per line from beginning and then reversing their order seems
+    # ~10-100x more performant than reading Byte per Byte from End of File.
     lines = f.readlines()
     lines = reversed(lines)
     for i, line in enumerate(lines):
