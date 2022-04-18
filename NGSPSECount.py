@@ -40,10 +40,14 @@ def init():
 
     config = configparser.ConfigParser()
     config.read('./config.ini')
-    PLAYER_ID = config['DEFAULT']['PLAYER_ID']
-    BURST_MSG = config['DEFAULT']['PLAYER_ID']
-    CLIMAX_MSG = config['DEFAULT']['PLAYER_ID']
-
+    try:
+        PLAYER_ID = config['DEFAULT']['PLAYER_ID']
+        BURST_MSG = config['DEFAULT']['BURST_MSG']
+        CLIMAX_MSG = config['DEFAULT']['CLIMAX_MSG']
+    except KeyError:
+        prints.print_error("Unable to read config.ini . Does the file exist? Are the keys \"PLAYER_ID\", \"BURST_MSG\" "
+                           "and \"CLIMAX_MSG\" named and set correctly?")
+        exit(0)
     prints.print_info("config read successfully.")
 
 
