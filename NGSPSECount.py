@@ -8,6 +8,7 @@ from threading import Thread
 from util.colors import BColors
 from util import prints
 
+VERSION = "1.0.0"
 PLAYER_ID = ""
 BURST_MSG = ""
 CLIMAX_MSG = ""
@@ -22,8 +23,6 @@ def init():
     global BURST_MSG
     global CLIMAX_MSG
 
-    prints.print_info("Locating log_ngs folder...")
-
     # Locate Documents Folder
     buf = ctypes.create_unicode_buffer(ctypes.wintypes.MAX_PATH)
     ctypes.windll.shell32.SHGetFolderPathW(None, 5, None, 0, buf)
@@ -34,9 +33,7 @@ def init():
     except ValueError:
         prints.print_error(f"Found no folder containing 'log_ngs' in {buf.value}. Normally this should only happen "
                            f"when the game is not installed.")
-
     prints.print_info(f"log_ngs folder is {PATH}")
-    prints.print_info("Reading config...")
 
     config = configparser.ConfigParser()
     config.read('./config.ini')
@@ -101,16 +98,17 @@ def chat_parser(lines):
             if msg == BURST_MSG:
                 ENEMIES = -1
                 PSE = True
+                prints.print_info("==========================================")
                 prints.print_info("PSE Burst detected. Logging Enemy Kills...")
             elif msg == CLIMAX_MSG:
                 if PSE:
                     PSE = False
                     prints.print_info("PSE Climax detected.")
-                    prints.print_info(f"Enemies killed during PSE: {BColors.LIGHT_PURPLE}{ENEMIES}")
+                    prints.print_info(f"Enemies killed during PSE: {BColors.YELLOW}{ENEMIES}")
                 elif ENEMIES != -1:
                     encore_enemies = latest_trial()
                     prints.print_info("Additional PSE Climax detected. Is that an Encore, or did you change rooms?")
-                    prints.print_info(f"Enemies killed since last PSE Climax: {BColors.LIGHT_PURPLE}"
+                    prints.print_info(f"Enemies killed since last PSE Climax: {BColors.LIGHT_CYAN}"
                                       f"{encore_enemies - ENEMIES}")
                     ENEMIES = encore_enemies
 
@@ -195,6 +193,7 @@ def reverse_trial_parser(f, enemies):
 
 if __name__ == "__main__":
     try:
+        prints.print_info(f"Running Version {VERSION}")
         init()
 
         # Create Enemy Logging Thread
