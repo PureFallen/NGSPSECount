@@ -1,19 +1,41 @@
+import ctypes.wintypes
 from datetime import datetime, timezone
+import glob
+import os
 from threading import Thread
 
 from util.colors import BColors
 from util import prints
 
-PATH = "D:/Documents/SEGA/PHANTASYSTARONLINE2_NA_STEAM/log_ngs/"
 PLAYER_ID = "11055664"
 BURST_MSG = "/p Triggered PSE Burst."
 CLIMAX_MSG = "/p Triggered PSE Climax."
 
+PATH = ""
 PSE = False
 ENEMIES = -1
 
 
-def init(log_type):
+def init():
+    global PATH
+
+    prints.print_info("Locating log_ngs folder...")
+
+    # Locate Documents Folder
+    buf = ctypes.create_unicode_buffer(ctypes.wintypes.MAX_PATH)
+    ctypes.windll.shell32.SHGetFolderPathW(None, 5, None, 0, buf)
+
+    # Get game folder in which log_ngs was updated most recently
+    try:
+        PATH = max(glob.glob(os.path.join(buf.value, "SEGA/*/log_ngs/")), key=os.path.getmtime)
+    except ValueError:
+        prints.print_error(f"Found no folder containing 'log_ngs' in {buf.value}. Normally this should only happen "
+                           f"when the game is not installed.")
+
+    prints.print_info(f"log_ngs folder is {PATH}")
+
+
+def get_file_obj(log_type):
     error_fnf = False
     date = int(datetime.now(timezone.utc).strftime("%Y%m%d"))
     path = f"{PATH}{log_type}{date}_00.txt"
@@ -33,9 +55,8 @@ def init(log_type):
 
 
 def chat_loop():
-    prints.print_info("Initialize script...")
     # Get initial values
-    f, date = init("ChatLog")
+    f, date = get_file_obj("ChatLog")
     # Set File Cursor at the end of the file; f.seek(0, 2) not worked for whatever reason.
     f.readlines()
     prints.print_info("Initialization complete.")
@@ -43,7 +64,7 @@ def chat_loop():
     while True:
         # Check for UTC Midnight to update values
         if int(datetime.now(timezone.utc).strftime("%Y%m%d")) > date:
-            f, date = init("ChatLog")
+            f, date = get_file_obj("ChatLog")
 
         # Check for new lines in the Chatlog File
         lines = f.readlines()
@@ -81,19 +102,19 @@ def chat_parser(lines):
 
 def action_loop():
     # Get initial values
-    f, date = init("ActionLog")
+    f, date = get_file_obj("ActionLog")
 
     while True:
         if PSE:
             global ENEMIES
             if ENEMIES == -1:
-                f, date = init("ActionLog")
+                f, date = get_file_obj("ActionLog")
                 f.readlines()
                 ENEMIES = latest_trial()
 
             # Check for UTC Midnight to update values
             if int(datetime.now(timezone.utc).strftime("%Y%m%d")) > date:
-                f, date = init("ActionLog")
+                f, date = get_file_obj("ActionLog")
             # Check for new lines in the ActionLog File
             lines = f.readlines()
             if lines:
@@ -115,7 +136,7 @@ def action_parser(lines):
 
 
 def latest_trial():
-    f, _ = init("ActionLog")
+    f, _ = get_file_obj("ActionLog")
     enemies = 0
 
     lines = f.readlines()
@@ -136,6 +157,8 @@ def latest_trial():
 
 if __name__ == "__main__":
     try:
+        init()
+
         # Create Enemy Logging Thread
         t = Thread(target=action_loop, daemon=True)
         t.start()

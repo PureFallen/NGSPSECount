@@ -56,7 +56,6 @@ The script requires Python 3 to run. It only uses default packages and local pac
 
 | Constant   | Meaning                                                                                                                                                         |
 |------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| PATH       | Path towards your PSO2NGS Logfiles                                                                                                                              |
 | PLAYER_ID  | Your PlayerID Number. Prevents double triggering through other players with equal PSE Auto Chats. Can be found in your character information or in the logfile. |
 | BURST_MSG  | The **exact** message send by Auto Chat-Feature when a PSE Burst occurs                                                                                         |
 | CLIMAX_MSG | The **exact** message send by Auto Chat-Feature when a PSE Climax occurs                                                                                        |
@@ -68,6 +67,8 @@ Be sure that the sending of Autowords is enabled for your character.
 Auto Chat Messages can be set at:
 
 `ESC -> Chat -> Auto Chat Settings -> Events -> At PSE Burst Start/At PSE Climax`
+
+Once all information has been set, run the script by executing `run.cmd`.
 
 # Known limitations | Issues
 
