@@ -1,10 +1,7 @@
 # NGSPSECount
 A python script which keeps track of enemies killed during an PSE in PSO2:NGS. That's it.
 
-The code has been thrown together in a couple of minutes. It is just supposed to work, it is not going to win any engineering awards. The code performance is questionable. I know.
-
 ![image](https://user-images.githubusercontent.com/68307987/163992942-83caf225-2cf0-4478-8d73-3750657cf9ac.png)
-
 
 # Why?
 
