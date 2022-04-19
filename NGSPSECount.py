@@ -51,12 +51,13 @@ def init():
     return log_path, player_identifier, burst_message, climax_message
 
 
-def get_file_obj(log_path, log_type, date=int(datetime.now(timezone.utc).strftime("%Y%m%d"))):
+def get_file_obj(log_path, log_type):
     error_fnf = False
-    log_path = f"{log_path}{log_type}{date}_00.txt"
 
     # Attempt to open Logfile until success.
     while True:
+        date = int(datetime.now(timezone.utc).strftime("%Y%m%d"))
+        log_path = f"{log_path}{log_type}{date}_00.txt"
         try:
             f = open(log_path, 'r', encoding="utf-16")
             break
