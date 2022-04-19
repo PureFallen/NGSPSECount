@@ -121,7 +121,6 @@ def action_parser(line_list, _):
             if line_list[6] == "N-Meseta(1000)" or line_list[6] == "N-Meseta(1500)":
                 ENEMIES = -1
             ENEMIES += 1
-            print(ENEMIES)
 
 
 if __name__ == "__main__":
