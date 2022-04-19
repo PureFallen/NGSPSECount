@@ -53,6 +53,8 @@ Almost every interaction and chat message send in PSO2 is logged towards their l
 
 [Download](https://github.com/PureFallen/NGSPSECount/releases/latest) the latest version from The Releases Page. Configure the `config.ini` as described below.
 
+When running into problems, try running the executable via. `Windows Terminal` instead of the Command Prompt, Powershell or other Shell of your choice. For that execute `run.cmd` instead.
+
 As alternative, you can [clone](https://github.com/PureFallen/NGSPSECount/archive/refs/heads/main.zip) the project and run the python script `NGSPSECount.py` directly. Please note that this will require a basic installation of Python 3.
 
 ## Configuration
