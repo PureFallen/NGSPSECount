@@ -8,7 +8,7 @@ from threading import Thread
 from util.colors import BColors
 from util import prints
 
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 PLAYER_ID = ""
 BURST_MSG = ""
 CLIMAX_MSG = ""
@@ -22,6 +22,10 @@ def init():
     global PLAYER_ID
     global BURST_MSG
     global CLIMAX_MSG
+
+    # Enable ANSI codes
+    os.system("")
+    prints.print_info(f"Running Version {VERSION}")
 
     # Locate Documents Folder
     buf = ctypes.create_unicode_buffer(ctypes.wintypes.MAX_PATH)
@@ -193,7 +197,6 @@ def reverse_trial_parser(f, enemies):
 
 if __name__ == "__main__":
     try:
-        prints.print_info(f"Running Version {VERSION}")
         init()
 
         # Create Enemy Logging Thread
