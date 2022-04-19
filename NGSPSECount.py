@@ -55,6 +55,7 @@ def get_file_obj(log_path, log_type, date=int(datetime.now(timezone.utc).strftim
     error_fnf = False
     log_path = f"{log_path}{log_type}{date}_00.txt"
 
+    # Attempt to open Logfile until success.
     while True:
         try:
             f = open(log_path, 'r', encoding="utf-16")
@@ -93,7 +94,10 @@ def chat_parser(line_list, parser_params):
     global PSE, ENEMIES, ENEMIES_CLIMAX
     # line_list: ['<DATE>T<TIME>', '<MESSAGE_ID>', <'CHAT_TYPE'>, '<PLAYER_ID>', '<PLAYER_NAME>', '<MESSAGE>']
     # parser_params: ['PLAYER_ID', 'BURST_MSG', 'CLIMAX_MSG']
+
+    # Check if Chat Message is from PlayerID
     if line_list[3] == parser_params[0]:
+        # Check if Chat Message is either PSE Burst Auto Chat or PSE Climax Auto Chat
         if line_list[5] == parser_params[1]:
             PSE = True
             prints.print_info("==========================================")
@@ -117,7 +121,9 @@ def action_parser(line_list, _):
     # '<MISC>']
     # "ITEM" for Meseta is empty; instead it is only referred in AMOUNT as "Meseta(12)".
     if len(line_list) >= 7:
+        # Check if Action is a pickup of Meseta (Enemy Kill)
         if line_list[2] == "[Pickup]" and line_list[6].startswith("N-Meseta"):
+            # Check if pick of Meseta is caused by a trial clear
             if line_list[6] == "N-Meseta(1000)" or line_list[6] == "N-Meseta(1500)":
                 ENEMIES = -1
             ENEMIES += 1
@@ -133,7 +139,7 @@ if __name__ == "__main__":
                           daemon=True)
         action_t.start()
 
-        # Call Chat Log Parsing
+        # Loop Chat Log Parsing
         log_monitor(path, "ChatLog", chat_parser, (player_id, burst_msg, climax_msg))
     except KeyboardInterrupt:
         prints.print_info(BColors.YELLOW + "Program closed by user (CTRL+C)")
