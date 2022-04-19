@@ -8,7 +8,7 @@ from threading import Thread
 from util.colors import BColors
 from util import prints
 
-VERSION = "2.0.0"
+VERSION = "1.2.0"
 PSE = False
 ENEMIES = ENEMIES_CLIMAX = 0
 
