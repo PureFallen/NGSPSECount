@@ -1,6 +1,6 @@
 import configparser
 import ctypes.wintypes
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 import glob
 import os
 from threading import Thread
@@ -8,20 +8,13 @@ from threading import Thread
 from util.colors import BColors
 from util import prints
 
-VERSION = "1.1.0"
-PLAYER_ID = ""
-BURST_MSG = ""
-CLIMAX_MSG = ""
-PATH = ""
+VERSION = "2.0.0"
 PSE = False
-ENEMIES = -1
+ENEMIES = ENEMIES_CLIMAX = 0
 
 
 def init():
-    global PATH
-    global PLAYER_ID
-    global BURST_MSG
-    global CLIMAX_MSG
+    log_path = player_identifier = burst_message = climax_message = str()
 
     # Enable ANSI codes
     os.system("")
@@ -33,32 +26,38 @@ def init():
 
     # Get game folder in which log_ngs was updated most recently
     try:
-        PATH = max(glob.glob(os.path.join(buf.value, "SEGA/*/log_ngs/")), key=os.path.getmtime)
+        log_path = max(glob.glob(os.path.join(buf.value, "SEGA/*/log_ngs/")), key=os.path.getmtime)
     except ValueError:
         prints.print_error(f"Found no folder containing 'log_ngs' in {buf.value}. Normally this should only happen "
                            f"when the game is not installed.")
-    prints.print_info(f"log_ngs folder is {PATH}")
+        exit(0)
 
+    prints.print_info(f"log_ngs folder is {log_path}")
+
+    # Read Config Values
     config = configparser.ConfigParser()
     config.read('./config.ini')
     try:
-        PLAYER_ID = config['DEFAULT']['PLAYER_ID']
-        BURST_MSG = config['DEFAULT']['BURST_MSG']
-        CLIMAX_MSG = config['DEFAULT']['CLIMAX_MSG']
+        player_identifier = config['DEFAULT']['PLAYER_ID']
+        burst_message = config['DEFAULT']['BURST_MSG']
+        climax_message = config['DEFAULT']['CLIMAX_MSG']
     except KeyError:
         prints.print_error("Unable to read config.ini . Does the file exist? Are the keys \"PLAYER_ID\", \"BURST_MSG\" "
                            "and \"CLIMAX_MSG\" named and set correctly?")
         exit(0)
+
     prints.print_info("config read successfully.")
 
+    return log_path, player_identifier, burst_message, climax_message
 
-def get_file_obj(log_type, date=int(datetime.now(timezone.utc).strftime("%Y%m%d"))):
+
+def get_file_obj(log_path, log_type, date=int(datetime.now(timezone.utc).strftime("%Y%m%d"))):
     error_fnf = False
-    path = f"{PATH}{log_type}{date}_00.txt"
+    log_path = f"{log_path}{log_type}{date}_00.txt"
 
     while True:
         try:
-            f = open(path, 'r', encoding="utf-16")
+            f = open(log_path, 'r', encoding="utf-16")
             break
         except FileNotFoundError:
             if not error_fnf:
@@ -70,140 +69,73 @@ def get_file_obj(log_type, date=int(datetime.now(timezone.utc).strftime("%Y%m%d"
     return f, date
 
 
-def chat_loop():
+def log_monitor(log_path, log_type, parser_method, parser_params):
     # Get initial values
-    f, date = get_file_obj("ChatLog")
+    f, date = get_file_obj(log_path, log_type)
     # Set File Cursor at the end of the file; f.seek(0, 2) not worked for whatever reason.
     f.readlines()
-    prints.print_info("Initialization complete.")
 
     while True:
         # Check for UTC Midnight to update values
         if int(datetime.now(timezone.utc).strftime("%Y%m%d")) > date:
-            f, date = get_file_obj("ChatLog")
+            f, date = get_file_obj(log_path, log_type)
 
         # Check for new lines in the Chatlog File
         lines = f.readlines()
         if lines:
-            chat_parser(lines)
+            for line in lines:
+                # Split Line into list using Tabulator; strip newline and similar
+                line_list = [s.strip() for s in line.split("\t")]
+                parser_method(line_list, parser_params)
 
 
-def chat_parser(lines):
-    for line in lines:
-        # Split line into a list, seperated by Tabulator
-        # Legend: ['<DATE>T<TIME>', '<MESSAGE_ID>', <'CHAT_TYPE'>, '<PLAYER_ID>', '<PLAYER_NAME>', '<MESSAGE>']
-        line_list = line.split("\t")
-        if line_list[3] == PLAYER_ID:
-            global ENEMIES
-            global PSE
+def chat_parser(line_list, parser_params):
+    global PSE, ENEMIES, ENEMIES_CLIMAX
+    # line_list: ['<DATE>T<TIME>', '<MESSAGE_ID>', <'CHAT_TYPE'>, '<PLAYER_ID>', '<PLAYER_NAME>', '<MESSAGE>']
+    # parser_params: ['PLAYER_ID', 'BURST_MSG', 'CLIMAX_MSG']
+    if line_list[3] == parser_params[0]:
+        if line_list[5] == parser_params[1]:
+            PSE = True
+            prints.print_info("==========================================")
+            prints.print_info("PSE Burst detected. Waiting for PSE Climax...")
+        elif line_list[5] == parser_params[2]:
+            if PSE:
+                PSE = False
+                ENEMIES_CLIMAX = ENEMIES
+                prints.print_info("PSE Climax detected.")
+                prints.print_info(f"Enemies killed during PSE: {BColors.YELLOW}{ENEMIES}")
+            else:
+                ENEMIES -= ENEMIES_CLIMAX
+                ENEMIES_CLIMAX = ENEMIES
+                prints.print_info("Additional PSE Climax detected. Is that an Encore, or did you change rooms?")
+                prints.print_info(f"Enemies killed since last PSE Climax: {BColors.LIGHT_CYAN}{ENEMIES}")
 
-            # Each Message ends with a Newline. No, I do not know why.
-            msg = line_list[5].strip()
-            if msg == BURST_MSG:
+
+def action_parser(line_list, _):
+    global ENEMIES
+    # Legend: ['<DATE>T<TIME>', '<MESSAGE_ID>', <'ACTION_TYPE'>, '<PLAYER_ID>', '<PLAYER_NAME>', '<ITEM>', '<AMOUNT>',
+    # '<MISC>']
+    # "ITEM" for Meseta is empty; instead it is only referred in AMOUNT as "Meseta(12)".
+    if len(line_list) >= 7:
+        if line_list[2] == "[Pickup]" and line_list[6].startswith("N-Meseta"):
+            if line_list[6] == "N-Meseta(1000)" or line_list[6] == "N-Meseta(1500)":
                 ENEMIES = -1
-                PSE = True
-                prints.print_info("==========================================")
-                prints.print_info("PSE Burst detected. Logging Enemy Kills...")
-            elif msg == CLIMAX_MSG:
-                if PSE:
-                    PSE = False
-                    prints.print_info("PSE Climax detected.")
-                    prints.print_info(f"Enemies killed during PSE: {BColors.YELLOW}{ENEMIES}")
-                elif ENEMIES != -1:
-                    encore_enemies = latest_trial()
-                    prints.print_info("Additional PSE Climax detected. Is that an Encore, or did you change rooms?")
-                    prints.print_info(f"Enemies killed since last PSE Climax: {BColors.LIGHT_CYAN}"
-                                      f"{encore_enemies - ENEMIES}")
-                    ENEMIES = encore_enemies
-
-
-def action_loop():
-    # Get initial values
-    f, date = get_file_obj("ActionLog")
-
-    while True:
-        if PSE:
-            global ENEMIES
-            if ENEMIES == -1:
-                f, date = get_file_obj("ActionLog")
-                f.readlines()
-                ENEMIES = latest_trial()
-
-            # Check for UTC Midnight to update values
-            if int(datetime.now(timezone.utc).strftime("%Y%m%d")) > date:
-                f, date = get_file_obj("ActionLog")
-            # Check for new lines in the ActionLog File
-            lines = f.readlines()
-            if lines:
-                action_parser(lines)
-
-
-def action_parser(lines):
-    for line in lines:
-        # Split line into a list, seperated by Tabulator Legend: ['<DATE>T<TIME>', '<MESSAGE_ID>', <'ACTION_TYPE'>,
-        # '<PLAYER_ID>', '<PLAYER_NAME>', '<ITEM>', '<AMOUNT>', '<MISC>']
-        # "ITEM" for Meseta is empty; instead it is only referred in AMOUNT as "Meseta(12)".
-        line_list = line.split("\t")
-        if len(line_list) >= 7:
-            action_type = line_list[2].strip()
-            amount = line_list[6].strip()
-            if action_type == "[Pickup]" and amount.startswith("N-Meseta"):
-                global ENEMIES
-                ENEMIES += 1
-
-
-def latest_trial():
-    enemies = 0
-
-    # Look for latest trial in today's ActionLog
-    f, _ = get_file_obj("ActionLog")
-    trial, enemies = reverse_trial_parser(f, enemies)
-    f.close()
-    # Edge case: The Trial was cleared before UTC Midnight, while the Auto Chat happened after UTC Midnight.
-    # Look for Trial in yesterday's logfile at the risk of getting something wrong when the person just started.
-    if not trial:
-        date = int((datetime.now(timezone.utc) - timedelta(days=1)).strftime("%Y%m%d"))
-        f, _ = get_file_obj("ActionLog", date)
-        trial, enemies = reverse_trial_parser(f, enemies)
-        f.close()
-        # The person likely joined into an existing PSE Burst and didn't have one for a while.
-        if not trial:
-            enemies = 0
-
-    return enemies
-
-
-def reverse_trial_parser(f, enemies):
-    trial = False
-
-    # Depending on Logfile Size, reading every line per line from beginning and then reversing their order seems
-    # ~10-100x more performant than reading Byte per Byte from End of File.
-    lines = f.readlines()
-    lines = reversed(lines)
-    for i, line in enumerate(lines):
-        # Check function action_listener for Legend.
-        line_list = line.split("\t")
-        if len(line_list) >= 7:
-            action_type = line_list[2].strip()
-            amount = line_list[6].strip()
-            if action_type == "[Pickup]" and amount.startswith("N-Meseta"):
-                if amount == "N-Meseta(1000)" or amount == "N-Meseta(1500)":
-                    trial = True
-                    break
-                enemies += 1
-
-    return trial, enemies
+            ENEMIES += 1
+            print(ENEMIES)
 
 
 if __name__ == "__main__":
     try:
-        init()
+        path, player_id, burst_msg, climax_msg = init()
 
-        # Create Enemy Logging Thread
-        t = Thread(target=action_loop, daemon=True)
-        t.start()
+        # Create Action Log Parsing Thread
+        action_t = Thread(target=log_monitor,
+                          args=(path, "ActionLog", action_parser, ()),
+                          daemon=True)
+        action_t.start()
 
-        chat_loop()
+        # Call Chat Log Parsing
+        log_monitor(path, "ChatLog", chat_parser, (player_id, burst_msg, climax_msg))
     except KeyboardInterrupt:
         prints.print_info(BColors.YELLOW + "Program closed by user (CTRL+C)")
         exit()
