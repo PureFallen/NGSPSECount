@@ -3,7 +3,7 @@ A python script which keeps track of enemies killed during an PSE in PSO2:NGS. T
 
 The code has been thrown together in a couple of minutes. It is just supposed to work, it is not going to win any engineering awards. The code performance is questionable. I know.
 
-![image](https://user-images.githubusercontent.com/68307987/163701308-b19ffbb5-8407-4fb5-bc74-6bf553da597e.png)
+![image](https://user-images.githubusercontent.com/68307987/163992942-83caf225-2cf0-4478-8d73-3750657cf9ac.png)
 
 
 # Why?
@@ -14,27 +14,17 @@ This script is supposed to be a cheap alternative for keeping track of enemies k
 
 More information:
 
-~~https://nitter.net/dilute_rin/status/1515107043891642369~~
-
-~~https://nitter.net/dilute_rin/status/1515108153628983297~~
-
-~~https://nitter.net/dilute_rin/status/1515109040984313860~~
-
-https://nitter.net/TheuberClips/status/1515109226561286145
-
+https://web.archive.org/web/20220417020420/https://twitter.com/dilute_rin/status/1515107043891642369 \
+https://web.archive.org/web/20220417020643/https://twitter.com/dilute_rin/status/1515108153628983297 \
+https://web.archive.org/web/20220417020835/https://twitter.com/dilute_rin/status/1515109040984313860 \
+https://nitter.net/TheuberClips/status/1515109226561286145 \
 https://nitter.net/flowerint1034/status/1515111429355245568
+https://nitter.net/flowerint1034/status/1515660633236467715
 
 Snapshots:
-
-https://web.archive.org/web/20220417020420/https://twitter.com/dilute_rin/status/1515107043891642369
-
-https://web.archive.org/web/20220417020643/https://twitter.com/dilute_rin/status/1515108153628983297
-
-https://web.archive.org/web/20220417020835/https://twitter.com/dilute_rin/status/1515109040984313860
-
-https://web.archive.org/web/20220417021041/https://twitter.com/TheuberClips/status/1515109226561286145
-
-https://web.archive.org/web/20220417021223/https://twitter.com/flowerint1034/status/1515111429355245568
+https://web.archive.org/web/20220417021041/https://twitter.com/TheuberClips/status/1515109226561286145 \
+https://web.archive.org/web/20220417021223/https://twitter.com/flowerint1034/status/1515111429355245568 \
+https://web.archive.org/web/20220419113238/https://twitter.com/flowerint1034/status/1515660633236467715
 
 ## Current State of Research
 
@@ -42,7 +32,7 @@ The Chance for a PSE Encore to appear is guessed at 20%. There seems to be no re
 
 (Exception: Killing 0 PSE Enemies will reward no PSE Burst with Sample size n=20)
 
-https://docs.google.com/spreadsheets/d/1N0WPMFXLnHK76RzznlI15psfP73i46YTNteehrxOSEQ
+https://docs.google.com/spreadsheets/d/1N0WPMFXLnHK76RzznlI15psfP73i46YTNteehrxOSEQ \
 https://docs.google.com/spreadsheets/d/1_OgubzM5QFe4rua4Xu0GSMAI8Idoq8r2yI8Ioyec6oY
 
 # How?
