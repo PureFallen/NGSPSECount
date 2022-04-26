@@ -144,4 +144,4 @@ if __name__ == "__main__":
         log_monitor(path, "ChatLog", chat_parser, (player_id, burst_msg, climax_msg))
     except KeyboardInterrupt:
         prints.print_info(BColors.YELLOW + "Program closed by user (CTRL+C)")
-        exit()
+        exit(0)
