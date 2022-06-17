@@ -144,8 +144,8 @@ def action_parser(line_list, parser_params):
             # Update wallet count
             parser_params[0] = new_total
             # Print out Meseta Yield
-            print(f"Pickup Meseta: {parser_params[1]}; Meseta (Other): {parser_params[2]}; "
-                  f"Session Meseta: {parser_params[1] + parser_params[2]}; "
+            print(f"Meseta (Pickup): {parser_params[1]}; Meseta (Other): {parser_params[2]}; "
+                  f"Meseta (Session): {parser_params[1] + parser_params[2]}; "
                   f"Wallet Content: {parser_params[0]}", end='\r')
 
     return parser_params
