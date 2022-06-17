@@ -4,7 +4,8 @@ from .colors import BColors
 
 
 def print_info(info_string):
-    print("{}{}[INFO]  {}{}{}".format(BColors.PURPLE, timestamp(), BColors.WHITE, info_string, BColors.RESET))
+    print("                                                                                                          \r"
+          "{}{}[INFO]  {}{}{}".format(BColors.PURPLE, timestamp(), BColors.WHITE, info_string, BColors.RESET))
 
 
 def print_error(err_string):
