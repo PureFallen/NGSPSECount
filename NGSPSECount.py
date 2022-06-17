@@ -8,7 +8,7 @@ from threading import Thread
 from util.colors import BColors
 from util import prints
 
-VERSION = "1.2.1"
+VERSION = "2.0.0"
 PSE = False
 ENEMIES = ENEMIES_CLIMAX = 0
 
@@ -88,7 +88,7 @@ def log_monitor(log_path, log_type, parser_method, parser_params):
             for line in lines:
                 # Split Line into list using Tabulator; strip newline and similar
                 line_list = [s.strip() for s in line.split("\t")]
-                parser_method(line_list, parser_params)
+                parser_params = parser_method(line_list, parser_params)
 
 
 def chat_parser(line_list, parser_params):
@@ -115,12 +115,16 @@ def chat_parser(line_list, parser_params):
                 prints.print_info("Additional PSE Climax detected. Is that an Encore, or did you change rooms?")
                 prints.print_info(f"Enemies killed since last PSE Climax: {BColors.LIGHT_CYAN}{ENEMIES}")
 
+    return parser_params
 
-def action_parser(line_list, _):
+
+def action_parser(line_list, parser_params):
     global ENEMIES
-    # Legend: ['<DATE>T<TIME>', '<MESSAGE_ID>', <'ACTION_TYPE'>, '<PLAYER_ID>', '<PLAYER_NAME>', '<ITEM>', '<AMOUNT>',
-    # '<MISC>']
+    # line_list: ['<DATE>T<TIME>', '<MESSAGE_ID>', <'ACTION_TYPE'>, '<PLAYER_ID>', '<PLAYER_NAME>', '<ITEM>',
+    # '<AMOUNT>', '<MISC>']
     # "ITEM" for Meseta is empty; instead it is only referred in AMOUNT as "Meseta(12)".
+    #
+    # parser_params: ['Previous Meseta in Wallet', 'Meseta Gained by Pickup', 'Meseta Gained Differently']
     if len(line_list) >= 7:
         # Check if Action is a pickup of Meseta (Enemy Kill)
         if line_list[2] == "[Pickup]" and line_list[6].startswith("N-Meseta"):
@@ -129,6 +133,23 @@ def action_parser(line_list, _):
                 ENEMIES = -1
             ENEMIES += 1
 
+            pickup_amount = int(line_list[6][9:-1])
+            new_total = int(line_list[7][16:-1])
+            # Add Meseta picked up from enemy
+            parser_params[1] += pickup_amount
+            # Check if user started program or used/moved meseta
+            if parser_params[0] != -1 and parser_params[0] < new_total:
+                # subtract old wallet count and picked up meseta from new wallet count; add to differently gained meseta
+                parser_params[2] += new_total - parser_params[0] - pickup_amount
+            # Update wallet count
+            parser_params[0] = new_total
+            # Print out Meseta Yield
+            print(f"Pickup Meseta: {parser_params[1]}; Meseta (Other): {parser_params[2]}; "
+                  f"Session Meseta: {parser_params[1] + parser_params[2]}; "
+                  f"Wallet Content: {parser_params[0]}", end='\r')
+
+    return parser_params
+
 
 if __name__ == "__main__":
     try:
@@ -136,7 +157,7 @@ if __name__ == "__main__":
 
         # Create Action Log Parsing Thread
         action_t = Thread(target=log_monitor,
-                          args=(path, "ActionLog", action_parser, ()),
+                          args=(path, "ActionLog", action_parser, [-1, 0, 0]),
                           daemon=True)
         action_t.start()
 
